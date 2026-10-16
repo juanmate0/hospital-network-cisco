@@ -1,0 +1,31 @@
+! ===== Area 1 / Area 2 routers: base config + SSH =====
+enable
+configure terminal
+hostname AREA-2-ROUTER
+enable password cisco
+banner motd #AREA-2-ROUTER CONSOLE#
+no ip domain-lookup
+line console 0
+ password cisco
+ login
+end
+configure terminal
+service password-encryption
+
+ip domain-name cisco.net
+username admin password cisco
+crypto key generate rsa
+1024
+line vty 0 15
+ login local
+ transport input ssh
+end
+write memory
+
+! ===== Area 1 router - GigabitEthernet0/2 (server subnet, VLAN 70) =====
+interface GigabitEthernet0/2
+ no ip address
+interface GigabitEthernet0/2.70
+ encapsulation dot1Q 70
+ ip address 192.168.102.65 255.255.255.240
+! Test: ping from DHCP Server command prompt -> DID NOT WORK (see docs/troubleshooting.md)

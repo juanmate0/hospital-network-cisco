@@ -1,0 +1,107 @@
+! Tip: to configure OSPF, count how many connections (links/subnets) each device has.
+
+! ===== DI-multilayer1 =====
+configure terminal
+ip routing
+router ospf 10
+ network 192.168.100.0   0.0.0.63 area 0
+ network 192.168.100.64  0.0.0.63 area 0
+ network 192.168.100.128 0.0.0.63 area 0
+ network 192.168.100.192 0.0.0.63 area 0
+ network 192.168.101.0   0.0.0.63 area 0
+ network 192.168.101.64  0.0.0.63 area 0
+ network 192.168.102.80  0.0.0.3  area 0
+exit
+ip route 0.0.0.0 0.0.0.0 192.168.102.82
+do write memory
+
+! ===== DI-multilayer2 =====
+configure terminal
+ip routing
+router ospf 10
+ network 192.168.100.0   0.0.0.63 area 0
+ network 192.168.100.64  0.0.0.63 area 0
+ network 192.168.100.128 0.0.0.63 area 0
+ network 192.168.100.192 0.0.0.63 area 0
+ network 192.168.101.0   0.0.0.63 area 0
+ network 192.168.101.64  0.0.0.63 area 0
+ network 192.168.102.84  0.0.0.3  area 0
+exit
+ip route 0.0.0.0 0.0.0.0 192.168.102.86
+do write memory
+
+! ===== DD-multilayer1 =====
+configure terminal
+ip routing
+router ospf 10
+ network 192.168.101.128 0.0.0.31 area 0
+ network 192.168.101.160 0.0.0.31 area 0
+ network 192.168.101.192 0.0.0.31 area 0
+ network 192.168.101.224 0.0.0.31 area 0
+ network 192.168.102.0   0.0.0.31 area 0
+ network 192.168.102.32  0.0.0.31 area 0
+ network 192.168.102.92  0.0.0.3  area 0
+exit
+ip route 0.0.0.0 0.0.0.0 192.168.102.94
+do write memory
+
+! ===== DD-multilayer2 =====
+configure terminal
+ip routing
+router ospf 10
+ network 192.168.101.128 0.0.0.31 area 0
+ network 192.168.101.160 0.0.0.31 area 0
+ network 192.168.101.192 0.0.0.31 area 0
+ network 192.168.101.224 0.0.0.31 area 0
+ network 192.168.102.0   0.0.0.31 area 0
+ network 192.168.102.32  0.0.0.31 area 0
+ network 192.168.102.96  0.0.0.3  area 0
+exit
+ip route 0.0.0.0 0.0.0.0 192.168.102.98
+do write memory
+
+! ===== Left router (HQ) =====
+router ospf 10
+ network 192.168.102.80 0.0.0.3  area 0
+ network 192.168.102.84 0.0.0.3  area 0
+ network 192.168.102.88 0.0.0.3  area 0
+ network 192.168.102.64 0.0.0.15 area 0
+ network 195.136.17.4   0.0.0.3  area 0
+ network 195.136.17.0   0.0.0.3  area 0
+exit
+! Primary default route via ISP1, floating backup via ISP2 (AD 70)
+ip route 0.0.0.0 0.0.0.0 195.136.17.2
+ip route 0.0.0.0 0.0.0.0 195.136.17.6 70
+do write memory
+
+! ===== Right router (Branch) =====
+router ospf 10
+ network 192.168.102.92 0.0.0.3 area 0
+ network 192.168.102.96 0.0.0.3 area 0
+ network 192.168.102.88 0.0.0.3 area 0
+ network 195.136.17.8   0.0.0.3 area 0
+ network 195.136.17.12  0.0.0.3 area 0
+exit
+! Primary default route via ISP2, floating backup via ISP1 (AD 70)
+ip route 0.0.0.0 0.0.0.0 195.136.17.14
+ip route 0.0.0.0 0.0.0.0 195.136.17.10 70
+do write memory
+
+! ===== ISP1 =====
+router ospf 10
+ network 195.136.17.8 0.0.0.3 area 0
+ network 195.136.17.0 0.0.0.3 area 0
+exit
+do write memory
+
+! ===== ISP2 =====
+router ospf 10
+ network 195.136.17.4  0.0.0.3 area 0
+ network 195.136.17.12 0.0.0.3 area 0
+exit
+do write memory
+
+! ===== Verification =====
+! do show ip route
+! do show ip ospf neighbor
+! do show startup-config

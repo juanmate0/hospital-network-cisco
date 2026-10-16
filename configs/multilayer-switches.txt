@@ -1,0 +1,73 @@
+! ===== Multilayer switches: base config + SSH =====
+enable
+configure terminal
+hostname DD-MultilayerSW2
+enable password cisco
+banner motd #DD-MultilayerSWITCH2 CONSOLE#
+no ip domain-lookup
+line console 0
+ password cisco
+ login
+end
+configure terminal
+service password-encryption
+
+ip domain-name cisco.net
+username admin password cisco
+crypto key generate rsa
+1024
+line vty 0 15
+ login local
+ transport input ssh
+end
+write memory
+
+! ===== VLANs on L3 switches (trunks toward access switches) =====
+vlan 10
+vlan 20
+vlan 30
+vlan 40
+vlan 50
+vlan 60
+interface range gig1/0/2-7
+ switchport mode trunk
+exit
+
+vlan 70
+vlan 80
+vlan 90
+vlan 100
+vlan 110
+vlan 120
+interface range gig1/0/2-7
+ switchport mode trunk
+exit
+
+! ===== Convert switchport into routed port (one block per MLS) =====
+! DI-MLS1
+interface gig1/0/1
+ no switchport
+ ip address 192.168.102.81 255.255.255.252
+exit
+do write memory
+
+! DI-MLS2
+interface gig1/0/1
+ no switchport
+ ip address 192.168.102.85 255.255.255.252
+exit
+do write memory
+
+! DD-MLS1
+interface gig1/0/1
+ no switchport
+ ip address 192.168.102.93 255.255.255.252
+exit
+do write memory
+
+! DD-MLS2
+interface gig1/0/1
+ no switchport
+ ip address 192.168.102.97 255.255.255.252
+exit
+do write memory

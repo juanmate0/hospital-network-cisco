@@ -1,0 +1,36 @@
+# ---- OS junk ----
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# ---- Editors / IDEs ----
+.vscode/
+.idea/
+*.swp
+
+# ---- Packet Tracer backups / autosaves (keep the final .pkt) ----
+*.pkt.bak
+*.pka.bak
+*~.pkt
+Backup/
+PacketTracer*/
+
+# ---- Temp / logs ----
+*.log
+*.tmp
+*.bak
+*.orig
+
+# ---- SECURITY: never commit secrets ----
+.env
+*.pem
+*.key
+*.ppk
+id_rsa*
+*.pfx
+credentials*
+secrets*
+# Real (non-lab) device configs with real passwords/SNMP strings:
+production-*.txt
+real-*.txt

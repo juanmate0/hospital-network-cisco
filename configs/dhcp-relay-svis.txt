@@ -1,0 +1,65 @@
+! SVIs + DHCP relay (ip helper-address -> DHCP server 192.168.102.67)
+! Shown for DI-MultilayerSWITCH1
+configure terminal
+interface vlan 10
+ ip address 192.168.100.1 255.255.255.192
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 20
+ ip address 192.168.100.65 255.255.255.192
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 30
+ ip address 192.168.100.129 255.255.255.192
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 40
+ ip address 192.168.100.193 255.255.255.192
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 50
+ ip address 192.168.101.1 255.255.255.192
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 60
+ ip address 192.168.101.65 255.255.255.192
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 70
+ ip address 192.168.101.129 255.255.255.224
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 80
+ ip address 192.168.101.161 255.255.255.224
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 90
+ ip address 192.168.101.193 255.255.255.224
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 100
+ ip address 192.168.101.225 255.255.255.224
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 110
+ ip address 192.168.102.1 255.255.255.224
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+interface vlan 120
+ ip address 192.168.102.33 255.255.255.224
+ ip helper-address 192.168.102.67
+ no shutdown
+exit
+end
+write memory

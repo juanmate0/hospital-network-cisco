@@ -1,0 +1,38 @@
+! ===== Department access switches (L2) =====
+enable
+configure terminal
+hostname DEPT1
+enable password cisco
+banner motd #MESSAGE#
+no ip domain-lookup
+line console 0
+ password cisco
+ login
+end
+configure terminal
+service password-encryption
+exit
+write memory
+
+! ===== VLAN on a department switch =====
+configure terminal
+vlan 120
+ name DEPT-12
+exit
+interface range fa0/1-2
+ switchport mode trunk
+exit
+interface range fa0/3-24
+ switchport mode access
+ switchport access vlan 120
+exit
+end
+write memory
+
+! ===== Troubleshooting: port was in the wrong VLAN =====
+! show vlan brief
+! show interfaces status
+! show run | section interface FastEthernet0/3
+! configure terminal
+! interface range fa0/1-2
+!  no switchport access vlan
