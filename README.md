@@ -1,12 +1,12 @@
 # 🏥 Hospital Network Infrastructure — Cisco Packet Tracer
 
 Design and implementation of a hierarchical, segmented and redundant network
-for a hospital environment with a main site (HQ) and a branch office (Branch).
+for a hospital environment with a left side (AREA-1) and a right side (AREA-2).
 
 ![Logical topology](img/full-view.png)
 
 > **Lab note:** all passwords in this repository (`cisco`) are **lab-only** values
-> used in a simulated Packet Tracer environment. No real infrastructure is exposed.
+> used in a simulated Packet Tracer environment.
 
 ## 🛠️ Skills demonstrated
 
@@ -16,17 +16,19 @@ SSH hardening · Port Security · Network documentation & troubleshooting
 
 ## 🗺️ Topology
 
-- **HQ**: 1 Core Router + 2 Multilayer Switches + L2 access switches
-- **Branch**: 1 Router + 2 Multilayer Switches + L2 access switches
-- **WAN**: HQ↔Branch serial link + 2 ISPs (redundancy)
-- **VLANs**: 12 departments (VLAN 10–120)
+![Left-Side](img/area1-left.png) ![Center](img/center.png) ![Right-Side](img/area2-right.png)
+
+- **AREA-1**: 1 Router + 2 Multilayer Switches + L2 access switches
+- **AREA-2**: 1 Router + 2 Multilayer Switches + L2 access switches
+- **WAN**: AREA-1↔AREA-2 serial link + 2 ISPs (redundancy)
+- **VLANs**: 12 departments (VLAN 10–120) and server (VLAN 130)
 
 ## Design principles and constraints
 
 - **Cost-effectiveness**: hierarchical design with minimal provisioning, while guaranteeing redundancy.
 - **Security (CIA triad)**: Confidentiality, Integrity and Availability through segmentation, ACLs and encryption.
 - **Segmentation**: each department lives in its own **VLAN** and its own **subnet**.
-- **Hierarchical & redundant model**: each site has **one Core Router**, **two Multilayer (L3) Switches** and several **L2 Access Switches**. HQ and Branch routers are connected by a **serial link**, and each connects to **two separate ISPs** for WAN redundancy.
+- **Hierarchical & redundant model**: each site has **one Core Router**, **two Multilayer (L3) Switches** and several **L2 Access Switches**. Area1 and Area2 routers are connected by a **serial link**, and each connects to **two separate ISPs** for WAN redundancy.
 - **Wireless**: every department must have wireless access for its users.
 
 ---
@@ -34,7 +36,7 @@ SSH hardening · Port Security · Network documentation & troubleshooting
 ## IP addressing plan and subnetting
 
 - **Base private network**: `192.168.100.0` (subnetted to fit all departments).
-- **User estimate**: HQ departments ≈ 60 users each; Branch departments ≈ 30 users each → `/26` for HQ, `/27` for Branch.
+- **User estimate**: Area-1 departments ≈ 60 users each; Area-2 departments ≈ 30 users each → `/26` for Area-1, `/27` for Area-2.
 - **Public IPs (WAN/Internet)**:
   - `195.136.17.0/30`
   - `195.136.17.4/30`
@@ -59,7 +61,7 @@ Full table: [docs/addressing.md](docs/addressing.md)
 | 7 | Static IPs for DHCP, DNS, Web and Email servers | ✅ Done |
 | 8 | DHCP scopes per VLAN + `ip helper-address` (DHCP Relay) | ⚠️ Not working yet — see [troubleshooting](docs/troubleshooting.md) |
 | 9 | Wireless networks (APs/WLANs per department) | ⏳ Pending |
-| 10 | IPSec Site-to-Site VPN HQ↔Branch | ⏳ Pending |
+| 10 | IPSec Site-to-Site VPN AREA-1↔AREA-2 | ⏳ Pending |
 | 11 | Default static routes on all routers/MLS (ISP failover) | 🔶 Partially done |
 | 12 | PAT and extended ACLs | ⏳ Pending |
 | 13 | Final verification and testing | ⏳ Pending |
